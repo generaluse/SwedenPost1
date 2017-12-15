@@ -1,0 +1,22 @@
+Web.xml :
+<web-app id="WebApp_ID" version="2.4"    xmlns="http://java.sun.com/xml/ns/j2ee"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee    http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">         <display-name>Soting the numbers </display-name>         <servlet>        <servlet-name>Sorting</servlet-name>            <servlet-class>                org.springframework.web.servlet.DispatcherServlet            </servlet-class>        <load-on-startup>1</load-on-startup>    </servlet>     <servlet-mapping>        <servlet-name>Sorting</servlet-name>        <url-pattern>/</url-pattern>    </servlet-mapping> </web-app>
+Sorting-servlet-config.xml :
+<bean class="org.springframewok.web.servlet.handler.SmpleUrlhandlerMapping"/> <context:component-scan base-package="test.hnm.Controllers"></context:component-scan>    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  <property name="prefix" value="/WEB-INF/jsp/"></property>  <property name="suffix" value=".jsp"></property>  </bean>    </beans>  
+SortController.java:
+Package test.hnm.Controllers;import org.springframework.stereotype.Controller;import org.springframework.web.bind.annotation.RequestMapping;import org.springframework.web.servlet.ModelAndView;
+@Controller  public class SortController {        @RequestMapping("/Sortingform")      public ModelAndView showform(){          return new ModelAndView("Sortingform","numbers",new Sort());      }      @RequestMapping(value="/save",method = RequestMethod.POST)      public ModelAndView save(@ModelAttribute("sort") Sort sort){              ArrayList<Sort> sortedValues = sort.sortNumbers();          return new ModelAndView("redirect:/viewsort");//will redirect to viewSort request mapping      }            @RequestMapping("/viewSorting")      public ModelAndView viewSorting(){  
+        List<Sort> list=new ArrayList<Sort>();                   return new ModelAndView("viewSorting","list",list);      }  
+  @RequestMapping("/viewSorting")      public ModelAndView timeSorting(){          long start = System.nanoTime();        ArrayList<Sort> sortedValues = sort.sortNumbers();         List<Sort> list=new ArrayList<Sort>();  long end = System.nanoTime();          //will calculate the time taken to sort the numbers long timeInMillis = TimeUnit.MILLISECONDS.convert(end - start, TimeUnit.NANOSECONDS);         return new ModelAndView("timeSorting","time",timeInMillis );      }  }
+Sort.java :
+public class Sort{
+int number;
+   public Sort(int number){
+   this.number=numbers;}
+ public int getNumbers() {      return id;  }  
+public ArrayList<int> sortNumbers(int numbers) //input number to sort with arraylist numbers{ ArrayList<int> arraylist = new ArrayList<int>();    arraylist.add("22");    arraylist.add("56");    arraylist.add("19");    arraylist.add("21"); arraylist.add(numbers);Collections.sort(arraylist); // here we are sorting the list of numbers with given numbers. //we have to find the new way inorder to display the number of position moved while inserting.return(arraylist);}
+}   
+Sortingform.jsp
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>             <form:form method="post" action="save">            <table >             <tr>              <td>Name : </td>             <td><form:input path="Sorting Value"  /></td>    //we are getting number, which needs to sort with existing numbers         </tr>             <tr>              <td colspan="2"><input type="submit" value="Save" /></td>             </tr>            </table>           </form:form>     
+<viewsorting.jsp - to display the sorted numbers
+  <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>       <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>      <form:form method="post" action="viewSorting">            <table >   <tr><th>Sorted Values</th></tr>     <c:forEach var="sort" items="${list}">      <tr>     <td>${numbers}</td>     </tr>     </c:forEach>  <tr><th>Time taken to sort</th></tr>   <tr>     <td>${time}</td>     </tr>    </table>  
+</form>
